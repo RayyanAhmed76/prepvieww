@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LineChart, Sparkles, Target } from 'lucide-react'
+import InterviewFeedbackMarkdown from '@/components/InterviewFeedbackMarkdown'
 
 export default function DashboardPerformance() {
   const router = useRouter()
@@ -145,8 +146,15 @@ export default function DashboardPerformance() {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="max-h-[220px] overflow-y-auto whitespace-pre-wrap rounded-xl border border-border/80 bg-gradient-to-b from-gray-50/90 to-white p-4 text-sm text-gray-700 shadow-inner">
-                {latest.ai_feedback || 'No feedback available.'}
+              <div className="max-h-[280px] overflow-y-auto rounded-xl border border-border/80 bg-gradient-to-b from-gray-50/90 to-white p-4 shadow-inner md:p-5">
+                {latest.ai_feedback ? (
+                  <InterviewFeedbackMarkdown
+                    content={latest.ai_feedback}
+                    className="text-sm [&_h2]:text-lg [&_h3]:text-base [&_p]:text-sm"
+                  />
+                ) : (
+                  <p className="text-sm text-gray-500">No feedback available.</p>
+                )}
               </div>
               <button
                 type="button"
@@ -159,18 +167,7 @@ export default function DashboardPerformance() {
           )}
         </div>
 
-        <div
-          style={{ animationDelay: '240ms' }}
-          className="rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.07] via-white to-accent/[0.06] p-6 shadow-lg backdrop-blur-sm lg:col-span-2 md:p-8 animate-fade-up motion-reduce:animate-none motion-reduce:opacity-100"
-        >
-          <h2 className="mb-4 text-2xl font-bold text-text-primary">Next Steps</h2>
-          <div className="rounded-xl border border-primary/20 bg-white/70 p-5 shadow-sm">
-            <p className="leading-relaxed text-gray-700">
-              Use the six metrics above to focus your next practice session. For fastest improvement, aim for strong eye
-              contact (&gt;70%), stable pace (120–150 WPM), and lower filler usage over time.
-            </p>
-          </div>
-        </div>
+        
       </div>
     </div>
   )

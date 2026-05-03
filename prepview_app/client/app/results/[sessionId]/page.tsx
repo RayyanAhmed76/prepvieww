@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 // 👇 Aapke Components Imports
-import MetricCard from '@/components/MetricCard'; 
+import MetricCard from '@/components/MetricCard';
 import Section from '@/components/Section';
-import TranscriptBox from '@/components/TranscriptBox'; 
+import TranscriptBox from '@/components/TranscriptBox';
+import InterviewFeedbackMarkdown from '@/components/InterviewFeedbackMarkdown'; 
 
 export default function ResultPage() {
   const params = useParams();
@@ -68,6 +69,24 @@ export default function ResultPage() {
   // 👇 DATA PARSING
   const nlp = typeof report.nlp_aggregate === 'string' ? JSON.parse(report.nlp_aggregate) : report.nlp_aggregate;
   const cv = typeof report.cv_aggregate === 'string' ? JSON.parse(report.cv_aggregate) : report.cv_aggregate;
+  const code =
+    report.code_aggregate == null
+      ? null
+      : typeof report.code_aggregate === 'string'
+        ? (() => {
+            try {
+              return JSON.parse(report.code_aggregate) as Record<string, unknown> | null
+            } catch {
+              return null
+            }
+          })()
+        : (report.code_aggregate as Record<string, unknown> | null)
+
+  const codePenaltyScore = code?.avg_score_with_penalties
+  const codeScoreDisplay =
+    codePenaltyScore != null && Number.isFinite(Number(codePenaltyScore))
+      ? `${Number(codePenaltyScore).toFixed(1)}/100`
+      : 'N/A'
 
   // Values formatting helpers
   const fillerPercentage = nlp?.avg_filler_rate ? (nlp.avg_filler_rate * 100).toFixed(1) : "0";
@@ -94,7 +113,7 @@ export default function ResultPage() {
 
         {/* 1. Overall Performance Section */}
         <Section title="Overall Performance">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <MetricCard 
                     label="Communication Quality" 
                     value={`${nlp?.avg_nlp_score?.toFixed(0) || 0}/100`} 
@@ -106,6 +125,10 @@ export default function ResultPage() {
                 <MetricCard 
                     label="Weakest Response" 
                     value={nlp?.weakest_answer_id || "N/A"} 
+                />
+                <MetricCard
+                    label="Code Score"
+                    value={codeScoreDisplay}
                 />
             </div>
         </Section>
@@ -134,13 +157,15 @@ export default function ResultPage() {
 
         {/* 4. AI Feedback Section */}
         <Section title="AI Interview Feedback">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                <div className="prose max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap">
-                    {report.ai_feedback ? report.ai_feedback : (
-                        <p className="text-gray-400 italic">No detailed feedback available.</p>
-                    )}
-                </div>
+          <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white via-slate-50/40 to-primary/[0.04] shadow-lg shadow-slate-200/60">
+            <div className="px-6 py-8 md:px-10 md:py-9">
+              {report.ai_feedback ? (
+                <InterviewFeedbackMarkdown content={report.ai_feedback} />
+              ) : (
+                <p className="text-center text-slate-400 italic">No detailed feedback available.</p>
+              )}
             </div>
+          </div>
         </Section>
 
       </div>

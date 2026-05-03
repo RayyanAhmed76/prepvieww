@@ -3,7 +3,6 @@ import os
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from pydantic import BaseModel
 import sys
-
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from prepview_engine.utils.common import logger
