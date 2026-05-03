@@ -39,8 +39,7 @@ const languages = [
   { value: 'python', label: 'Python' },
   { value: 'cpp', label: 'C++' },
   { value: 'java', label: 'Java' },
-  { value: 'typescript', label: 'TypeScript' },
-  { value: 'csharp', label: 'C#' },
+  
 ]
 
 const REPORT_STATUS_MESSAGES = [
@@ -364,70 +363,43 @@ export default function InterviewInterface({ fieldId }: InterviewInterfaceProps)
   }
 
   const stopRecording = async () => {
-    if (verbalRecordingLimitTimerRef.current) {
-      window.clearTimeout(verbalRecordingLimitTimerRef.current)
-      verbalRecordingLimitTimerRef.current = null
-    }
-
-    const activeRecorder = recorderRef.current
-    if (!activeRecorder || !sessionId) return
-    if (activeRecorder.state !== 'recording' && activeRecorder.state !== 'paused') return
-
-    if (timerIntervalRef.current) {
-      window.clearInterval(timerIntervalRef.current)
-      timerIntervalRef.current = null
-    }
-    setTimeLeftSec(null)
+    if (!recorder || !isRecording || !sessionId) return
 
     setIsRecording(false)
-    setIsUploading(true)
+    setIsUploading(true) 
 
+    // Wait for REAL stop event
     await new Promise<void>((resolve) => {
-      activeRecorder.onstop = () => resolve()
-      try {
-        if (activeRecorder.state !== 'inactive') {
-          activeRecorder.stop()
-        } else {
-          resolve()
-        }
-      } catch {
-        resolve()
-      }
-    })
+        recorder.onstop = () => resolve();
+        recorder.stop();
+    });
 
-    await new Promise((r) => setTimeout(r, 500))
+    // Buffer safety
+    await new Promise(r => setTimeout(r, 500));
 
+    // Blob creation
     const blob = new Blob(mediaChunksRef.current, { type: 'video/webm' })
-    console.log(`📹 Video Size: ${blob.size} bytes`)
-
-    const runVerbalLimitFollowUp = () => {
-      if (!verbalLimitFiredRef.current) return
-      verbalLimitFiredRef.current = false
-      setShowVerbalTimeLimitModal(true)
-      if (verbalFollowUpTimerRef.current) {
-        window.clearTimeout(verbalFollowUpTimerRef.current)
-      }
-      verbalFollowUpTimerRef.current = window.setTimeout(() => {
-        verbalFollowUpTimerRef.current = null
-        setShowVerbalTimeLimitModal(false)
-        if (currentQuestionRef.current < totalQuestions) {
-          setCurrentQuestion((c) => (c < totalQuestions ? c + 1 : c))
-          setCode('// Write your code here\n')
-          setOutput('')
-          setIsStopped(false)
-          setTimeLeftSec(null)
-          mediaChunksRef.current = []
-          setIsRecording(false)
-        }
-      }, 2600)
-    }
+    
+    console.log(`📹 Video Size: ${blob.size} bytes`);
 
     if (blob.size > 0) {
       const formData = new FormData()
-      formData.append('sessionId', sessionId)
-      formData.append('questionId', `Q${currentQuestion}`)
-      formData.append('fieldId', fieldId)
       formData.append('video', blob, `question-${currentQuestion}.webm`)
+      formData.append('questionId', `Q${currentQuestion}`) 
+      formData.append('fieldId', fieldId)
+      formData.append('sessionId', sessionId)
+      
+      // 🌟 NEW LOGIC: Backend ko question ka type aur details batayen
+      const qType = currentQuestionData?.type || 'verbal';
+      formData.append('questionType', qType);
+      
+      if (qType === 'coding') {
+          // Agar coding question hai toh code editor ka data bhi sath bhejein
+          formData.append('code', code); // Editor ka state variable
+          formData.append('language', selectedLanguage); // Dropdown state
+          formData.append('questionTitle', currentQuestionData.question);
+          formData.append('questionDescription', currentQuestionData.description);
+      }
 
       const token = localStorage.getItem('token')
       try {
@@ -444,20 +416,18 @@ export default function InterviewInterface({ fieldId }: InterviewInterfaceProps)
           console.error('Upload failed:', errorData)
           alert('Upload failed. Please try again.')
         } else {
-          console.log(' Video uploaded & Analysis started')
+            console.log(`✅ Video uploaded & ${qType === 'coding' ? 'Code' : 'Verbal'} Analysis started`)
         }
       } catch (error) {
         console.error('Error uploading video:', error)
       } finally {
-        setIsUploading(false)
+        setIsUploading(false) 
         setIsStopped(true)
-        runVerbalLimitFollowUp()
       }
     } else {
-      console.error('❌ Blob size is 0, nothing recorded!')
-      setIsUploading(false)
-      setIsStopped(true)
-      runVerbalLimitFollowUp()
+        console.error("❌ Blob size is 0, nothing recorded!");
+        setIsUploading(false)
+        setIsStopped(true)
     }
   }
 

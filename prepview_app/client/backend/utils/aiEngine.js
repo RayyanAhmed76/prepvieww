@@ -48,33 +48,49 @@ class AIInterviewEngine {
     - "description": The detailed problem statement including expected input/output and constraints.
   `;
 
-    // Resume Data ko String mein convert
-    const userPrompt = `
-      CANDIDATE DATA:
-      ${JSON.stringify(cvData)}
+  const userPrompt = `
+  CANDIDATE DATA:
+  ${JSON.stringify(cvData)}
 
-      TARGET FIELD:
-      ${field}
+  TARGET FIELD:
+  ${field}
 
-      STRICT OUTPUT EXAMPLE (MIXED):
+  STRICT OUTPUT EXAMPLE:
+  {
+    "questions": [
       {
-        "questions": [
-          {
-            "id": 1,
-            "type": "verbal",
-            "question": "API Security",
-            "description": "Verbally explain how you would secure a REST API against common attacks like SQL Injection."
-          },
-          {
-            "id": 2,
-            "type": "coding",
-            "question": "State Management Logic",
-            "description": "Given an array of integers and a target, return indices of two numbers that add up to the target.",
-            "timeLimitSec": 900
-          }
-        ]
+        "id": 1,
+        "type": "verbal",
+        "question": "API Security",
+        "description": "Verbally explain how you would secure a REST API against common attacks like SQL Injection and XSS."
+      },
+      {
+        "id": 2,
+        "type": "verbal",
+        "question": "State Management Logic",
+        "description": "Describe the difference between Redux and Context API based on your previous projects."
+      },
+      {
+        "id": 3,
+        "type": "verbal",
+        "question": "Database Optimization",
+        "description": "Explain how database indexing works under the hood and when you should avoid using it."
+      },
+      {
+        "id": 4,
+        "type": "coding",
+        "question": "First Unique Character",
+        "description": "Write a function that takes a string and returns the index of the first non-repeating character. If it doesn't exist, return -1. Optimize your solution for time complexity."
+      },
+      {
+        "id": 5,
+        "type": "coding",
+        "question": "Array Intersection",
+        "description": "Given two integer arrays, return an array of their intersection. Each element in the result must be unique. Consider using a Set for optimal O(N) efficiency."
       }
-    `;
+    ]
+  }
+`;
 
     try {
       // 👇 Groq API Call (Instead of Ollama)
@@ -151,14 +167,14 @@ class AIInterviewEngine {
           type: "coding",
           question: "System Design", 
           description: "Given an array of numbers, return the maximum sum of any contiguous subarray (Kadane's algorithm).",
-          timeLimitSec: 900
+          timeLimitSec: 300
         },
         { 
           id: 5, 
           type: "coding",
           question: "Learning Adaptability", 
           description: "Write a function that checks if a string is a palindrome (ignore spaces and case).",
-          timeLimitSec: 900
+          timeLimitSec: 300
         }
       ];
     }

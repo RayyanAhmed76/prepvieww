@@ -102,6 +102,10 @@ model InterviewChunk {
   eye_gaze            Json?
   facial_expression   Json?
   cv_score            Float?
+  // 💻 Code Evaluation & Proctoring Data (NEW)
+  original_technical_score Float?    
+  score_with_penalties     Float?    
+  proctoring_results       Json?   
 
   created_at          DateTime @default(now())
 
@@ -125,6 +129,9 @@ model FinalReport {
   // AI Output
   nlp_aggregate Json     // Stores WPM, Fillers, etc.
   cv_aggregate  Json     // Stores Eye Contact, etc.
+    // 💻 Code & Integrity Output (NEW)
+  code_aggregate Json?    // Will store { "avg_original_technical_score": 85, "score_with_penalties": 0, "is_cheating_suspected": true, "reasons": [...] }
+
   ai_feedback   String   @db.Text
   
   created_at    DateTime @default(now())

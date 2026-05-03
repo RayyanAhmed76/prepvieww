@@ -298,7 +298,7 @@ router.post('/abandon-session', verifyToken, async (req, res) => {
     if (!session) {
       return res.status(404).json({ message: 'Session not found' });
     }
-    scheduleInterviewMediaCleanup(sessionId);
+    deleteInterviewMediaForSession(sessionId);
     await prisma.interviewSession.delete({
       where: { session_id: sessionId },
     });
@@ -312,52 +312,74 @@ router.post('/abandon-session', verifyToken, async (req, res) => {
 // ==========================================
 // 2. UPLOAD VIDEO & TRIGGER PYTHON AI
 // ==========================================
+
+// ==========================================
+// UPLOAD VIDEO & DYNAMICALLY TRIGGER PYTHON AI
+// ==========================================
 router.post('/upload', verifyToken, upload.single('video'), async (req, res) => {
   try {
-    // 1. Validation
     if (!req.file) {
       return res.status(400).json({ message: 'No video file uploaded' });
     }
 
-    const { questionId, sessionId } = req.body;
+    // Frontend se bheja gaya saara data yahan receive hoga
+    const { 
+        questionId, 
+        sessionId, 
+        questionType, 
+        code, 
+        language, 
+        questionTitle, 
+        questionDescription 
+    } = req.body;
+
     if (!sessionId) {
       return res.status(400).json({ message: 'Session ID is required' });
     }
 
-    // 2. File Path Sahi Karna (Critical Step for Windows) 
-    // Windows par path 'C:\User\...' ata hai jo JSON mein error deta hai.
-    // Hum isay Forward Slashes '/' mein convert kar denge.
+    // Fix Windows path issues
     let videoAbsolutePath = path.resolve(req.file.path);
     videoAbsolutePath = videoAbsolutePath.replace(/\\/g, '/'); 
 
-    console.log(`[Node]  Video Saved at: ${videoAbsolutePath}`);
-    console.log(`[Node]  Handshaking with Python AI for Q: ${questionId}`);
+    console.log(`[Node] 📹 Video Saved at: ${videoAbsolutePath}`);
 
-    // 3. PYTHON API CALL (Fire & Forget) 
-    // Hum 'await' nahi lagayenge taakay User ko wait na karna pare.
-    axios.post('http://localhost:8000/analyze_chunk', {
-      session_id: sessionId,
-      question_id: questionId,
-      video_file_path: videoAbsolutePath
-    })
-    .then(pyRes => {
-      console.log(`[Python Success]  Status: ${pyRes.data.status}`);
-    })
-    .catch(err => {
-      // Agar Python band hai, toh Node crash nahi hona chahiye
-      console.error(`[Python Failed]  Error: ${err.message}`);
-      if (err.code === 'ECONNREFUSED') {
-        console.error(" Tip: Check if 'python app.py' is running on port 8000");
-      }
-    });
+    // 🌟 SMART ROUTING: Check question type to hit the right Python API
+    if (questionType === 'coding') {
+        
+        console.log(`[Node] 💻 Handshaking with Python CODE Analyzer for Q: ${questionId}`);
+        
+        axios.post('http://localhost:8000/analyze_code', {
+            session_id: sessionId,
+            question_id: questionId,
+            code: code,
+            language: language,
+            question_title: questionTitle,
+            question_description: questionDescription,
+            video_file_path: videoAbsolutePath // Path bhej rahe hain in case aapko coding mein bhi visual tracking chahiye ho
+        })
+        .then(pyRes => console.log(`[Python Code Success] Status: ${pyRes.data.status}`))
+        .catch(err => console.error(`[Python Code Failed] Error: ${err.message}`));
 
-    // 4. Response to Frontend (React)
-    // Frontend ko bas ye bata do ke upload ho gaya, baqi kaam peeche ho raha hai
+    } else {
+        
+        console.log(`[Node] 🗣️ Handshaking with Python VERBAL Analyzer for Q: ${questionId}`);
+        
+        axios.post('http://localhost:8000/analyze_chunk', {
+            session_id: sessionId,
+            question_id: questionId,
+            video_file_path: videoAbsolutePath
+        })
+        .then(pyRes => console.log(`[Python Verbal Success] Status: ${pyRes.data.status}`))
+        .catch(err => console.error(`[Python Verbal Failed] Error: ${err.message}`));
+    }
+
+    // Response back to React immediately (Don't wait for Python)
     res.json({
-      message: 'Video uploaded successfully. AI analysis started in background.',
+      message: `Video uploaded successfully. ${questionType === 'coding' ? 'Code' : 'Verbal'} analysis started in background.`,
       sessionId: sessionId,
       filename: req.file.filename,
-      pythonTriggered: true
+      pythonTriggered: true,
+      analysisType: questionType
     });
 
   } catch (error) {
@@ -365,6 +387,7 @@ router.post('/upload', verifyToken, upload.single('video'), async (req, res) => 
     res.status(500).json({ message: 'Error uploading video', error: error.message });
   }
 });
+
 
 
 
@@ -400,7 +423,7 @@ router.post('/finish-interview', verifyToken, async (req, res) => {
 
     console.log("[Node] ✅ Report Generated Successfully!");
 
-    scheduleInterviewMediaCleanup(sessionId);
+    deleteInterviewMediaForSession(sessionId);
 
     // Frontend ko data wapis bhejein
     res.json({
@@ -460,49 +483,38 @@ router.get('/results/:sessionId', async (req, res) => {
 router.post('/run-code', verifyToken, async (req, res) => {
   try {
     const { code, language } = req.body;
-    if (!code || !language) return res.status(400).json({ message: 'Code/Lang required' });
+    
+    // JDoodle language codes
+    const JDOODLE_LANGS = {
+      javascript: 'nodejs',
+      python: 'python3',
+      cpp: 'cpp17',
+      java: 'java'
+    };
 
-    const tempDir = path.join(__dirname, '../temp');
-    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+    const targetLang = JDOODLE_LANGS[language];
+    if (!targetLang) return res.status(400).json({ message: 'Unsupported language' });
 
-    let command = '';
-    let tempFile = '';
-    const timestamp = Date.now();
+    const response = await fetch('https://api.jdoodle.com/v1/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientId: process.env.JDOODLE_CLIENT_ID,
+        clientSecret: process.env.JDOODLE_CLIENT_SECRET,
+        script: code,
+        language: targetLang,
+        versionIndex: "0" 
+      })
+    });
 
-    switch (language) {
-      case 'javascript':
-        tempFile = path.join(tempDir, `code-${timestamp}.js`);
-        fs.writeFileSync(tempFile, code);
-        command = `node "${tempFile}"`;
-        break;
-      case 'typescript':
-        // Note: We run TS as JS (no transpile). This supports basic JS syntax in TS mode.
-        tempFile = path.join(tempDir, `code-${timestamp}.js`);
-        fs.writeFileSync(tempFile, code);
-        command = `node "${tempFile}"`;
-        break;
-      case 'python':
-        tempFile = path.join(tempDir, `code-${timestamp}.py`);
-        fs.writeFileSync(tempFile, code);
-        command = `python "${tempFile}"`;
-        break;
-      // ... Add other languages as needed
-      default:
-        return res.json({
-          output: `Language "${language}" is not supported on this server yet. Supported: javascript, typescript, python.`,
-          error: null,
-          result: null,
-        });
-    }
+    const data = await response.json();
+    
+    // JDoodle returns output directly
+    res.json({ 
+      output: data.output, 
+      error: data.error || null 
+    });
 
-    try {
-      const { stdout, stderr } = await execPromise(command, { timeout: 10000 });
-      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-      res.json({ output: stdout || stderr, result: stdout, error: stderr || null });
-    } catch (execError) {
-      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
-      res.json({ output: execError.stderr || execError.message, error: execError.message });
-    }
   } catch (error) {
     res.status(500).json({ message: 'Execution error', error: error.message });
   }

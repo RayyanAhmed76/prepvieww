@@ -3,6 +3,7 @@ from prepview_engine.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
 from pydantic import BaseModel, DirectoryPath, FilePath
 from pathlib import Path
 import os
+from typing import Dict
 from dotenv import load_dotenv
 # --- Step 1: Define data structures using Pydantic ---
 # Ye models hamain config.yaml ki structure ko validate karnay mai madad dengay
@@ -83,6 +84,12 @@ class NLPConfig(BaseModel):
     penalty_semantic_high: int
     penalty_semantic_med: int
 
+    # Scoring - Prosodic Confidence 
+    prosodic_confidence_low: float
+    prosodic_confidence_med: float
+    penalty_prosodic_high: int
+    penalty_prosodic_med: int
+
 class ScoringConfig(BaseModel):
     gaze_good_threshold: int
     gaze_avg_threshold: int
@@ -135,6 +142,14 @@ class CVConfig(BaseModel):
     expr_default_lip_thickness: float
     expr_default_brow_squeeze: float
     expr_default_brow_drop: float
+    
+class CodeAnalysisConfig(BaseModel):
+    provider: str
+    model_name: str
+    base_url: str
+    max_tokens: int
+    temperature: float
+    weights: Dict[str, float]
 
 class ReportGenerationConfig(BaseModel):
     provider: str
@@ -144,6 +159,7 @@ class ReportGenerationConfig(BaseModel):
     max_tokens: int
     system_prompt: str
     user_prompt_template: str
+
 
 # --- Step 2: The Main Configuration Manager Class ---
 
@@ -266,7 +282,13 @@ class ConfigurationManager:
                 aux_verb_ratio_high=sc.aux_verb_ratio_high, penalty_aux_verb=sc.penalty_aux_verb,
                 
                 semantic_instability_high=sc.semantic_instability_high, semantic_instability_med=sc.semantic_instability_med,
-                penalty_semantic_high=sc.penalty_semantic_high, penalty_semantic_med=sc.penalty_semantic_med
+                penalty_semantic_high=sc.penalty_semantic_high, penalty_semantic_med=sc.penalty_semantic_med,
+
+                # Scoring - Prosodic 
+                prosodic_confidence_low = sc.prosodic_confidence_low,
+                prosodic_confidence_med = sc.prosodic_confidence_med,
+                penalty_prosodic_high = sc.penalty_prosodic_high,
+                penalty_prosodic_med = sc.penalty_prosodic_med
             )
         except Exception as e:
             logger.error(f"Error parsing NLP params: {e}")
@@ -320,7 +342,26 @@ class ConfigurationManager:
             # Assuming 'logger' is imported in this file
             logger.error(f"Error parsing CV params: {e}")
             raise e
-
+        
+    def get_code_analysis_config(self) -> CodeAnalysisConfig:
+        """Returns Code Analysis AI parameters and weights from params.yaml"""
+        try:
+            # Assuming your params.yaml has a top-level key 'code_analysis'
+            code_params = self.params.code_analysis
+            
+            return CodeAnalysisConfig(
+                provider=code_params.provider,
+                model_name=code_params.model_name,
+                base_url=code_params.base_url,
+                max_tokens=code_params.max_tokens,
+                temperature=code_params.temperature,
+                weights=code_params.weights  
+            )
+        except Exception as e:
+            # Assuming 'logger' is imported
+            logger.error(f"Error parsing Code Analysis params: {e}")
+            raise e
+        
     def get_report_generation_config(self) -> ReportGenerationConfig:
         
         # params.yaml se 'report_generation' section uthaya
@@ -342,7 +383,7 @@ class ConfigurationManager:
 
         return config
 
-  
+    
 
     def get_confidence_training_config(self) -> ConfidenceTrainingConfig:
         config = self.config.confidence_model_training
@@ -362,5 +403,3 @@ class ConfigurationManager:
             random_state=params.random_state,
             test_size=params.test_size
         )
-    
- 

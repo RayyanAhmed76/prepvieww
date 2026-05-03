@@ -59,6 +59,16 @@ class AnalyzeRequest(BaseModel):
     question_id: str
     video_file_path: str
 
+class CodeAnalyzeRequest(BaseModel):
+    session_id: str
+    question_id: str
+    code: str
+    language: str
+    question_title: str
+    question_description: str
+    video_file_path: str
+
+
 class ReportRequest(BaseModel):
     session_id: str
     user_id: str
@@ -73,6 +83,21 @@ def process_video_task(request: AnalyzeRequest):
             analysis_pipeline.process_chunk(request.session_id, request.question_id, request.video_file_path)
     except Exception as e:
         logger.error(f"❌ Pipeline Error: {e}", exc_info=True)
+
+def process_code_task(request: CodeAnalyzeRequest):
+    try:
+        if analysis_pipeline:
+            analysis_pipeline.process_code_chunk(
+                session_id=request.session_id,
+                question_id=request.question_id,
+                code=request.code,
+                language=request.language,
+                question_title=request.question_title,
+                question_description=request.question_description,
+                video_path_str=request.video_file_path
+            )
+    except Exception as e:
+        logger.error(f" Code Pipeline Error: {e}", exc_info=True)
 
 # --- Task B: Generate Report 
 def generate_report_task(request: ReportRequest):
@@ -93,7 +118,7 @@ def generate_report_task(request: ReportRequest):
         aggregated_data = aggregator.aggregate_session(request.session_id)
         
         if not aggregated_data:
-            logger.error(f"❌ No data found for session {request.session_id}. Cannot generate report.")
+            logger.error(f" No data found for session {request.session_id}. Cannot generate report.")
             return
 
         # Step 2: Generate AI Feedback
@@ -109,12 +134,14 @@ def generate_report_task(request: ReportRequest):
         
         nlp_data = aggregated_data.get("nlp_aggregate", {})
         cv_data = aggregated_data.get("cv_aggregate", {})
+        code_data = aggregated_data.get("code_aggregate",{})
 
         success = db_connector.save_final_report(
             session_id=request.session_id,
             user_id=request.user_id,
             nlp_agg=nlp_data,
             cv_agg=cv_data,
+            code_agg=code_data,
             feedback_text=feedback_text
         )
 
@@ -144,6 +171,22 @@ async def analyze_chunk(request: AnalyzeRequest, background_tasks: BackgroundTas
         "session_id": request.session_id
     }
 
+@app.post("/analyze_code")
+async def analyze_code(request: CodeAnalyzeRequest, background_tasks: BackgroundTasks):
+    
+    # Input Check
+    if not request.session_id or not request.question_id:
+        raise HTTPException(status_code=400, detail="Missing IDs")
+
+    # Background Task Add
+    background_tasks.add_task(process_code_task, request)
+
+    return {
+        "status": "processing_started",
+        "message": "Code received. AI Analysis is running in background.",
+        "session_id": request.session_id
+    }
+
 @app.post("/generate_finalreport")
 async def generate_finalreport(request: ReportRequest): 
     """
@@ -161,7 +204,7 @@ async def generate_finalreport(request: ReportRequest):
 
         return {
             "status": "success",
-            "message": "Report Generated & Saved", 
+            "message": "Report Generated & Saved", # ✅ Ab ye sach hai
             "session_id": request.session_id
         }
         

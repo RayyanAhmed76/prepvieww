@@ -1,20 +1,15 @@
 {
   "pages": {
-    "/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/login/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
-    ],
-    "/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
     ],
     "/signup/page": [
       "static/chunks/webpack.js",
@@ -36,21 +31,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(app-shell)/layout.js"
     ],
-    "/forgot-password/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/forgot-password/page.js"
-    ],
-    "/reset-password/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/reset-password/page.js"
-    ],
-    "/(app-shell)/resume/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app-shell)/resume/page.js"
-    ],
     "/interview/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -61,20 +41,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/interview/layout.js"
     ],
-    "/(app-shell)/performance/page": [
+    "/interview/[fieldId]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(app-shell)/performance/page.js"
+      "static/chunks/app/interview/[fieldId]/page.js"
     ],
     "/results/[sessionId]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/results/[sessionId]/page.js"
     ],
-    "/interview/[fieldId]/page": [
+    "/(app-shell)/performance/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/interview/[fieldId]/page.js"
+      "static/chunks/app/(app-shell)/performance/page.js"
+    ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
     ]
   }
 }

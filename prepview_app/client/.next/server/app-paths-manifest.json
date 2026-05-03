@@ -1,8 +1,8 @@
 {
-  "/login/page": "app/login/page.js",
   "/results/[sessionId]/page": "app/results/[sessionId]/page.js",
+  "/page": "app/page.js",
   "/(app-shell)/dashboard/page": "app/(app-shell)/dashboard/page.js",
   "/interview/page": "app/interview/page.js",
-  "/(app-shell)/performance/page": "app/(app-shell)/performance/page.js",
-  "/interview/[fieldId]/page": "app/interview/[fieldId]/page.js"
+  "/interview/[fieldId]/page": "app/interview/[fieldId]/page.js",
+  "/(app-shell)/performance/page": "app/(app-shell)/performance/page.js"
 }
