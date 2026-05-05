@@ -17,10 +17,19 @@ export default function DashboardHome() {
   const [showMoreLeaderboard, setShowMoreLeaderboard] = useState(false)
   const summaryFetchRef = useRef<AbortController | null>(null)
 
+  const summaryCacheKeyForUser = (userId: string | number | null | undefined) =>
+    userId ? `dashboardSummaryCache:${String(userId)}` : 'dashboardSummaryCache:anon'
+
   useEffect(() => {
     const userData = localStorage.getItem('user')
+    let parsedUser: any = null
     if (userData) {
-      setUser(JSON.parse(userData))
+      try {
+        parsedUser = JSON.parse(userData)
+        setUser(parsedUser)
+      } catch {
+        // ignore
+      }
     }
 
     const storedGreeting = localStorage.getItem('dashboardGreeting')
@@ -34,13 +43,16 @@ export default function DashboardHome() {
     }
 
     // Load cached summary instantly (then refresh in background)
-    const cached = localStorage.getItem('dashboardSummaryCache')
+    const cacheKey = summaryCacheKeyForUser(parsedUser?.id)
+    const cached = localStorage.getItem(cacheKey)
     if (cached) {
       try {
         const parsed = JSON.parse(cached)
         if (parsed?.data) applySummary(parsed.data)
       } catch {}
     }
+    // Clear any legacy/global cache so we never show previous-user data.
+    localStorage.removeItem('dashboardSummaryCache')
     fetchDashboardSummary()
 
     // Listen for refresh events
@@ -63,6 +75,15 @@ export default function DashboardHome() {
   const fetchDashboardSummary = async () => {
     const token = localStorage.getItem('token')
     if (!token) return
+    const userData = localStorage.getItem('user')
+    let userId: any = null
+    if (userData) {
+      try {
+        userId = JSON.parse(userData)?.id
+      } catch {
+        // ignore
+      }
+    }
 
     // Abort previous in-flight request
     if (summaryFetchRef.current) summaryFetchRef.current.abort()
@@ -77,7 +98,10 @@ export default function DashboardHome() {
       if (!response.ok) return
       const data = await response.json()
       applySummary(data)
-      localStorage.setItem('dashboardSummaryCache', JSON.stringify({ at: Date.now(), data }))
+      localStorage.setItem(
+        summaryCacheKeyForUser(userId),
+        JSON.stringify({ at: Date.now(), userId: userId ?? null, data })
+      )
     } catch (error) {
       // Ignore abort errors
     }

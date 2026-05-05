@@ -26,6 +26,16 @@
       "static/chunks/main-app.js",
       "static/chunks/app/login/page.js"
     ],
+    "/(app-shell)/resume/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(app-shell)/resume/page.js"
+    ],
+    "/results/[sessionId]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/results/[sessionId]/page.js"
+    ],
     "/interview/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -36,25 +46,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/interview/layout.js"
     ],
-    "/interview/[fieldId]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/interview/[fieldId]/page.js"
-    ],
-    "/results/[sessionId]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/results/[sessionId]/page.js"
-    ],
     "/(app-shell)/performance/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(app-shell)/performance/page.js"
-    ],
-    "/(app-shell)/resume/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(app-shell)/resume/page.js"
     ]
   }
 }

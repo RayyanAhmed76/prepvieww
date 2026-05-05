@@ -34,6 +34,23 @@ export default function LoginPage() {
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('dashboardGreeting', 'welcome_back')
+        // Prefetch dashboard summary so the dashboard can show numbers instantly.
+        try {
+          const userId = data?.user?.id
+          const cacheKey = userId ? `dashboardSummaryCache:${String(userId)}` : 'dashboardSummaryCache:anon'
+          const summaryRes = await fetch('http://localhost:5000/api/interview/dashboard-summary', {
+            headers: { Authorization: `Bearer ${data.token}` },
+          })
+          if (summaryRes.ok) {
+            const summaryData = await summaryRes.json()
+            localStorage.setItem(
+              cacheKey,
+              JSON.stringify({ at: Date.now(), userId: userId ?? null, data: summaryData })
+            )
+          }
+        } catch {
+          // ignore
+        }
         router.push('/dashboard')
       } else {
         setError(data.message || 'Invalid credentials')

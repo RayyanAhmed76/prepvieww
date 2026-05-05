@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import BrandLogo from '@/components/BrandLogo'
 
@@ -35,6 +35,16 @@ interface CVData {
   }>
 }
 
+function dateForInput(value: string | undefined | null): string {
+  if (!value) return ''
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : ''
+}
+
+function isPresentValue(value: string | undefined | null): boolean {
+  if (!value) return false
+  return value.trim().toLowerCase() === 'present'
+}
+
 export default function CVCreationPage() {
   const router = useRouter()
   const [cvData, setCvData] = useState<CVData>({
@@ -51,6 +61,8 @@ export default function CVCreationPage() {
     education: [{ degree: '', institution: '', graduationYear: '', fyp: '' }],
     experience: [],
   })
+  const skillInputRefs = useRef<Array<HTMLInputElement | null>>([])
+  const pendingSkillFocusIndexRef = useRef<number | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -58,6 +70,14 @@ export default function CVCreationPage() {
       router.push('/login')
     }
   }, [router])
+
+  useEffect(() => {
+    const idx = pendingSkillFocusIndexRef.current
+    if (idx === null) return
+    pendingSkillFocusIndexRef.current = null
+    const el = skillInputRefs.current[idx]
+    el?.focus()
+  }, [cvData.skills.length])
 
   const handlePersonalInfoChange = (field: string, value: string) => {
     setCvData({
@@ -125,6 +145,7 @@ export default function CVCreationPage() {
   }
 
   const addSkill = () => {
+    pendingSkillFocusIndexRef.current = cvData.skills.length
     setCvData({
       ...cvData,
       skills: [...cvData.skills, ''],
@@ -239,10 +260,18 @@ export default function CVCreationPage() {
                 {cvData.skills.map((skill, index) => (
                   <input
                     key={index}
+                    ref={(el) => {
+                      skillInputRefs.current[index] = el
+                    }}
                     type="text"
                     placeholder="Skill (e.g., Python, React, Node.js)"
                     value={skill}
                     onChange={(e) => handleSkillChange(index, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key !== 'Enter') return
+                      e.preventDefault()
+                      addSkill()
+                    }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 ))}
@@ -383,19 +412,32 @@ export default function CVCreationPage() {
                     />
                     <div className="grid grid-cols-2 gap-2">
                       <input
-                        type="text"
-                        placeholder="Start Date (e.g., Jan 2020)"
-                        value={exp.startDate}
+                        type="date"
+                        placeholder="Start date"
+                        value={dateForInput(exp.startDate)}
                         onChange={(e) => handleExperienceChange(index, 'startDate', e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       />
-                      <input
-                        type="text"
-                        placeholder="End Date (e.g., Present)"
-                        value={exp.endDate}
-                        onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      />
+                      <div className="space-y-2">
+                        <input
+                          type="date"
+                          placeholder="End date"
+                          value={dateForInput(exp.endDate)}
+                          onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          disabled={isPresentValue(exp.endDate)}
+                        />
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input
+                            type="checkbox"
+                            checked={isPresentValue(exp.endDate)}
+                            onChange={(e) =>
+                              handleExperienceChange(index, 'endDate', e.target.checked ? 'Present' : '')
+                            }
+                          />
+                          Currently working here (Present)
+                        </label>
+                      </div>
                     </div>
                     <textarea
                       placeholder="Responsibilities"
@@ -413,7 +455,7 @@ export default function CVCreationPage() {
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 text-sm italic">No work experience added. Click "+ Add" to add experience.</p>
+                <p className="text-gray-500 text-sm italic">No work experience added. Click &quot;+ Add&quot; to add experience.</p>
               )}
             </div>
 

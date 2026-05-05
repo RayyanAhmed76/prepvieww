@@ -56,9 +56,7 @@ body {
 .no-native-password-toggle::-ms-reveal,
 .no-native-password-toggle::-ms-clear {
   display: none;
-}
-
-/* Chromium: hide credential / visibility affordances that duplicate our toggle */
+}/* Chromium: hide credential / visibility affordances that duplicate our toggle */
 .no-native-password-toggle::-webkit-credentials-auto-fill-button {
   display: none !important;
   visibility: hidden;
@@ -66,9 +64,7 @@ body {
   height: 0;
   width: 0;
   margin: 0;
-}
-
-/* Chromium/Edge: built-in password visibility control inside the field */
+}/* Chromium/Edge: built-in password visibility control inside the field */
 .no-native-password-toggle::-webkit-textfield-decoration-container {
   display: none !important;
 }
