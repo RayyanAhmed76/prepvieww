@@ -348,7 +348,8 @@ router.post('/upload', verifyToken, upload.single('video'), async (req, res) => 
         
         console.log(`[Node] 💻 Handshaking with Python CODE Analyzer for Q: ${questionId}`);
         
-        axios.post('http://localhost:8000/analyze_code', {
+        const engineUrl = (process.env.ENGINE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
+        axios.post(`${engineUrl}/analyze_code`, {
             session_id: sessionId,
             question_id: questionId,
             code: code,
@@ -364,7 +365,8 @@ router.post('/upload', verifyToken, upload.single('video'), async (req, res) => 
         
         console.log(`[Node] 🗣️ Handshaking with Python VERBAL Analyzer for Q: ${questionId}`);
         
-        axios.post('http://localhost:8000/analyze_chunk', {
+        const engineUrl = (process.env.ENGINE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
+        axios.post(`${engineUrl}/analyze_chunk`, {
             session_id: sessionId,
             question_id: questionId,
             video_file_path: videoAbsolutePath
@@ -416,7 +418,8 @@ router.post('/finish-interview', verifyToken, async (req, res) => {
 
     // Call Python API to Generate Report
     // Yahan hum 'await' use karenge kyunki User report ka wait kar raha hai
-    const pythonResponse = await axios.post('http://localhost:8000/generate_finalreport', {
+    const engineUrl = (process.env.ENGINE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
+    const pythonResponse = await axios.post(`${engineUrl}/generate_finalreport`, {
       session_id: sessionId,
       user_id: req.userId // Token se nikala hua secure User ID
     });

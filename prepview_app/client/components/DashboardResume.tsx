@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ToastProvider'
+import { getApiBaseUrl } from '@/lib/api'
 
 interface CVData {
   personalInfo: {
@@ -108,7 +109,7 @@ export default function DashboardResume() {
         return
       }
 
-      const response = await fetch('http://localhost:5000/api/cv', {
+      const response = await fetch(`${getApiBaseUrl()}/cv`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -235,7 +236,7 @@ export default function DashboardResume() {
     if (!cvData) return
     const token = localStorage.getItem('token')
     try {
-      const response = await fetch('http://localhost:5000/api/cv', {
+      const response = await fetch(`${getApiBaseUrl()}/cv`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

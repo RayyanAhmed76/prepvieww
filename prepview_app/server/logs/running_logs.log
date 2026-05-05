@@ -544,3 +544,113 @@
 [2026-05-05 11:45:12,290] - INFO - prepview_engine_logger - Step 4: Saving Results to Database...
 [2026-05-05 11:45:16,063] - ERROR - prepview_engine_logger -  [DB Error] Session ID session-1777963434380-zy5076t8j not found in DB!
 [2026-05-05 11:45:16,469] - ERROR - prepview_engine_logger - [FAILURE] Analysis done but Database Save failed for Q1.
+[2026-05-05 19:47:43,525] - INFO - prepview_engine_logger -  Starting PrepView AI Engine...
+[2026-05-05 19:47:43,528] - INFO - prepview_engine_logger - YAML file 'config\config.yaml' loaded successfully.
+[2026-05-05 19:47:43,550] - INFO - prepview_engine_logger - YAML file 'config\params.yaml' loaded successfully.
+[2026-05-05 19:47:43,551] - INFO - prepview_engine_logger - Configuration files loaded and artifacts root directory ensured.
+[2026-05-05 19:47:43,679] - INFO - prepview_engine_logger -  [DB] Connected to PostgreSQL via Config Manager
+[2026-05-05 19:47:44,410] - INFO - prepview_engine_logger - Initializing Analysis Pipeline Components...
+[2026-05-05 19:47:44,413] - INFO - prepview_engine_logger - YAML file 'config\config.yaml' loaded successfully.
+[2026-05-05 19:47:44,444] - INFO - prepview_engine_logger - YAML file 'config\params.yaml' loaded successfully.
+[2026-05-05 19:47:44,445] - INFO - prepview_engine_logger - Configuration files loaded and artifacts root directory ensured.
+[2026-05-05 19:47:44,446] - INFO - prepview_engine_logger -  [DB] Connected to PostgreSQL via Config Manager
+[2026-05-05 19:47:44,448] - INFO - prepview_engine_logger - PreprocessingComponent Initialized.
+[2026-05-05 19:47:44,448] - INFO - prepview_engine_logger - Loading CV Model Configuration...
+[2026-05-05 19:47:44,449] - INFO - prepview_engine_logger - CVAnalyzerComponent Initialized.
+[2026-05-05 19:47:44,450] - INFO - prepview_engine_logger - Loading NLP Model Configuration...
+[2026-05-05 19:47:49,328] - INFO - sentence_transformers.base.model - No device provided, using cpu
+[2026-05-05 19:47:50,456] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:50,486] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:50,798] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:50,799] - WARNING - huggingface_hub.utils._http - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-05-05 19:47:50,828] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:50,850] - INFO - sentence_transformers.base.model - Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+[2026-05-05 19:47:51,101] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:51,130] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:51,374] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:51,409] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+[2026-05-05 19:47:51,737] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:51,765] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:52,028] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:52,058] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:52,330] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+[2026-05-05 19:47:52,567] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:52,594] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:53,193] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-05 19:47:53,469] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-05 19:47:53,715] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-05 19:47:53,980] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-05 19:47:54,222] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:54,253] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:54,509] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:54,539] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:54,789] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:54,818] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:55,102] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:55,133] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:55,391] - INFO - httpx - HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-05-05 19:47:55,640] - INFO - httpx - HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-05-05 19:47:56,059] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-05 19:47:56,089] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+[2026-05-05 19:47:56,352] - INFO - httpx - HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+[2026-05-05 19:47:56,368] - INFO - prepview_engine_logger - NLPAnalyzerComponent Initialized.
+[2026-05-05 19:47:56,368] - INFO - prepview_engine_logger - Loading Code Configuration...
+[2026-05-05 19:47:57,138] - INFO - prepview_engine_logger - Pipeline Components Ready.
+[2026-05-05 19:47:57,153] - INFO - prepview_engine_logger - Result Aggregator Initialized (with DB connection).
+[2026-05-05 19:47:57,155] - INFO - prepview_engine_logger -  Report Generator Initialized (Provider: groq, Model: llama-3.3-70b-versatile)
+[2026-05-05 19:47:57,155] - INFO - prepview_engine_logger -  All Systems Ready!
+[2026-05-06 01:31:48,869] - INFO - prepview_engine_logger -  Starting PrepView AI Engine...
+[2026-05-06 01:31:48,888] - INFO - prepview_engine_logger - YAML file 'config\config.yaml' loaded successfully.
+[2026-05-06 01:31:48,937] - INFO - prepview_engine_logger - YAML file 'config\params.yaml' loaded successfully.
+[2026-05-06 01:31:48,940] - INFO - prepview_engine_logger - Configuration files loaded and artifacts root directory ensured.
+[2026-05-06 01:31:49,670] - INFO - prepview_engine_logger -  [DB] Connected to PostgreSQL via Config Manager
+[2026-05-06 01:31:51,488] - INFO - prepview_engine_logger - Initializing Analysis Pipeline Components...
+[2026-05-06 01:31:51,492] - INFO - prepview_engine_logger - YAML file 'config\config.yaml' loaded successfully.
+[2026-05-06 01:31:51,524] - INFO - prepview_engine_logger - YAML file 'config\params.yaml' loaded successfully.
+[2026-05-06 01:31:51,526] - INFO - prepview_engine_logger - Configuration files loaded and artifacts root directory ensured.
+[2026-05-06 01:31:51,528] - INFO - prepview_engine_logger -  [DB] Connected to PostgreSQL via Config Manager
+[2026-05-06 01:31:51,530] - INFO - prepview_engine_logger - PreprocessingComponent Initialized.
+[2026-05-06 01:31:51,531] - INFO - prepview_engine_logger - Loading CV Model Configuration...
+[2026-05-06 01:31:51,532] - INFO - prepview_engine_logger - CVAnalyzerComponent Initialized.
+[2026-05-06 01:31:51,533] - INFO - prepview_engine_logger - Loading NLP Model Configuration...
+[2026-05-06 01:31:57,677] - INFO - sentence_transformers.base.model - No device provided, using cpu
+[2026-05-06 01:32:05,505] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:05,515] - WARNING - huggingface_hub.utils._http - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-05-06 01:32:06,025] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:06,859] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:08,951] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:08,977] - INFO - sentence_transformers.base.model - Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+[2026-05-06 01:32:10,023] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:12,075] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config_sentence_transformers.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:13,048] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:14,011] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/README.md "HTTP/1.1 200 OK"
+[2026-05-06 01:32:14,972] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:16,021] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/modules.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:16,992] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:18,061] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/sentence_bert_config.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:19,075] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+[2026-05-06 01:32:20,061] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:20,995] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:22,059] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-06 01:32:23,066] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-06 01:32:24,079] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-06 01:32:25,005] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+[2026-05-06 01:32:25,804] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:26,058] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:27,011] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:28,011] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:28,874] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:29,015] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/config.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:29,722] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:30,020] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/tokenizer_config.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:30,348] - INFO - httpx - HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+[2026-05-06 01:32:31,026] - INFO - httpx - HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+[2026-05-06 01:32:31,873] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+[2026-05-06 01:32:32,025] - INFO - httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/c9745ed1d9f207416be6d2e6f8de32d1f16199bf/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+[2026-05-06 01:32:32,957] - INFO - httpx - HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+[2026-05-06 01:32:32,989] - INFO - prepview_engine_logger - NLPAnalyzerComponent Initialized.
+[2026-05-06 01:32:32,989] - INFO - prepview_engine_logger - Loading Code Configuration...
+[2026-05-06 01:32:33,881] - INFO - prepview_engine_logger - Pipeline Components Ready.
+[2026-05-06 01:32:33,916] - INFO - prepview_engine_logger - Result Aggregator Initialized (with DB connection).
+[2026-05-06 01:32:33,917] - INFO - prepview_engine_logger -  Report Generator Initialized (Provider: groq, Model: llama-3.3-70b-versatile)
+[2026-05-06 01:32:33,918] - INFO - prepview_engine_logger -  All Systems Ready!

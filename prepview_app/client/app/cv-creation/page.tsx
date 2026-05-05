@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import BrandLogo from '@/components/BrandLogo'
+import { getApiBaseUrl } from '@/lib/api'
 
 interface CVData {
   personalInfo: {
@@ -155,7 +156,7 @@ export default function CVCreationPage() {
   const handleSave = async () => {
     const token = localStorage.getItem('token')
     try {
-      const response = await fetch('http://localhost:5000/api/cv', {
+      const response = await fetch(`${getApiBaseUrl()}/cv`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

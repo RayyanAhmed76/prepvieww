@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { LucideIcon } from 'lucide-react'
 import { BarChart3, Timer, Flame } from 'lucide-react'
+import { getApiBaseUrl } from '@/lib/api'
 
 export default function DashboardHome() {
   const router = useRouter()
@@ -91,7 +92,7 @@ export default function DashboardHome() {
     summaryFetchRef.current = controller
 
     try {
-      const response = await fetch('http://localhost:5000/api/interview/dashboard-summary', {
+      const response = await fetch(`${getApiBaseUrl()}/interview/dashboard-summary`, {
         headers: { Authorization: `Bearer ${token}` },
         signal: controller.signal,
       })

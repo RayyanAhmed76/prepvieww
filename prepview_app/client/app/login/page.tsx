@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import BrandLogo from '@/components/BrandLogo'
 import { Eye, EyeOff } from 'lucide-react'
+import { getApiBaseUrl } from '@/lib/api'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${getApiBaseUrl()}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +39,7 @@ export default function LoginPage() {
         try {
           const userId = data?.user?.id
           const cacheKey = userId ? `dashboardSummaryCache:${String(userId)}` : 'dashboardSummaryCache:anon'
-          const summaryRes = await fetch('http://localhost:5000/api/interview/dashboard-summary', {
+          const summaryRes = await fetch(`${getApiBaseUrl()}/interview/dashboard-summary`, {
             headers: { Authorization: `Bearer ${data.token}` },
           })
           if (summaryRes.ok) {
